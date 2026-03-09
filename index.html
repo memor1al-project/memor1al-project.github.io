@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Memorial Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inconsolata:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #0e0c0a;
+      --parchment:  #f5f0e8;
+      --warm-white: #fdf8f2;
+      --gold:       #b8860b;
+      --gold-light: #d4a843;
+      --ash:        #8a8078;
+      --ember:      #c45c26;
+      --deep:       #1a1410;
+      --serif:      'Cormorant Garamond', Georgia, serif;
+      --mono:       'Inconsolata', monospace;
+      --body:       'Libre Baskerville', Georgia, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--ink);
+      color: var(--parchment);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ─── GRAIN OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.028;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse at center,
+        rgba(184,134,11,0.12) 0%,
+        rgba(196,92,38,0.06) 35%,
+        transparent 70%);
+      pointer-events: none;
+    }
+
+    .flame {
+      width: 28px;
+      height: 44px;
+      margin: 0 auto 48px;
+      position: relative;
+      animation: flicker 3.5s ease-in-out infinite;
+    }
+    .flame svg { width: 100%; height: 100%; }
+
+    @keyframes flicker {
+      0%, 100% { transform: scaleX(1) rotate(-1deg); opacity: 1; }
+      25%       { transform: scaleX(0.92) rotate(1.5deg); opacity: 0.9; }
+      50%       { transform: scaleX(1.06) rotate(-0.5deg); opacity: 1; }
+      75%       { transform: scaleX(0.96) rotate(1deg); opacity: 0.95; }
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(52px, 8vw, 104px);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      color: var(--warm-white);
+      max-width: 900px;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.5s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+      font-weight: 300;
+    }
+
+    .hero-subtitle {
+      font-family: var(--serif);
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ash);
+      max-width: 620px;
+      margin-top: 28px;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.8s forwards;
+    }
+
+    .hero-divider {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 48px auto 0;
+      opacity: 0;
+      animation: fadeUp 1s ease 1s forwards;
+    }
+
+    .hero-tagline {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--ash);
+      text-transform: uppercase;
+      margin-top: 32px;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.2s forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SECTION SHARED ─── */
+    section {
+      padding: 100px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .section-heading {
+      font-family: var(--serif);
+      font-size: clamp(36px, 5vw, 62px);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--warm-white);
+      margin-bottom: 32px;
+    }
+    .section-heading em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .section-body {
+      font-size: 17px;
+      color: #c8bfb0;
+      max-width: 680px;
+      line-height: 1.9;
+    }
+
+    hr.ornament {
+      border: none;
+      border-top: 1px solid rgba(184,134,11,0.2);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ─── MISSION ─── */
+    .mission {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 760px) {
+      .mission { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    .mission-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 32px 0;
+      border-top: 1px solid rgba(184,134,11,0.25);
+    }
+    .mission-stat-num {
+      font-family: var(--serif);
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .mission-stat-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ash);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 40px;
+    }
+
+    /* ─── PROJECTS ─── */
+    .projects-section {
+      padding-top: 0;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2px;
+      margin-top: 60px;
+      border: 1px solid rgba(184,134,11,0.15);
+    }
+
+    .project-card {
+      background: rgba(255,255,255,0.02);
+      padding: 40px 36px;
+      border-right: 1px solid rgba(184,134,11,0.1);
+      border-bottom: 1px solid rgba(184,134,11,0.1);
+      transition: background 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .project-card:hover {
+      background: rgba(184,134,11,0.06);
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--ember));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s ease;
+    }
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .project-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: block;
+    }
+    .project-name {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.25;
+      color: var(--warm-white);
+      margin-bottom: 14px;
+    }
+    .project-desc {
+      font-size: 14px;
+      color: var(--ash);
+      line-height: 1.7;
+    }
+    .project-link {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-top: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .project-card:hover .project-link { opacity: 1; }
+    .project-link::after { content: '→'; }
+
+    /* ─── PILLARS ─── */
+    .pillars {
+      padding-top: 0;
+    }
+    .pillars-list {
+      margin-top: 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .pillar {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 40px;
+      align-items: start;
+      padding: 48px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .pillar-num {
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(184,134,11,0.3);
+      line-height: 1;
+      padding-top: 4px;
+    }
+    .pillar-title {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--warm-white);
+      margin-bottom: 12px;
+    }
+    .pillar-body {
+      font-size: 15px;
+      color: var(--ash);
+      line-height: 1.8;
+      max-width: 580px;
+    }
+
+    /* ─── QUOTE ─── */
+    .quote-section {
+      text-align: center;
+      padding: 120px 24px;
+    }
+    .pull-quote {
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.4;
+      color: var(--warm-white);
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .pull-quote::before {
+      content: '\201C';
+      font-size: 120px;
+      color: rgba(184,134,11,0.15);
+      position: absolute;
+      top: -30px;
+      left: -20px;
+      font-family: var(--serif);
+      line-height: 1;
+    }
+    .quote-attr {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--ash);
+      margin-top: 36px;
+    }
+
+    /* ─── TECH ─── */
+    .tech-section {
+      padding-top: 0;
+    }
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 48px;
+    }
+    .tech-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border: 1px solid rgba(184,134,11,0.3);
+      color: var(--ash);
+      transition: all 0.3s;
+    }
+    .tech-tag:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+      background: rgba(184,134,11,0.05);
+    }
+
+    /* ─── CTA ─── */
+    .cta-section {
+      text-align: center;
+      padding: 120px 24px 160px;
+      position: relative;
+    }
+    .cta-glow {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse at bottom center,
+        rgba(184,134,11,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-heading {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 300;
+      color: var(--warm-white);
+      margin-bottom: 20px;
+    }
+    .cta-sub {
+      font-size: 16px;
+      color: var(--ash);
+      max-width: 480px;
+      margin: 0 auto 48px;
+    }
+    .cta-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .btn-primary {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 36px;
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 500;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-secondary {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 36px;
+      border: 1px solid rgba(184,134,11,0.5);
+      color: var(--gold-light);
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      background: rgba(184,134,11,0.08);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-brand {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--warm-white);
+    }
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(138,128,120,0.6);
+      text-transform: uppercase;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ash);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--gold-light); }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       HERO
+  ══════════════════════════════════════ -->
+  <div class="hero">
+    <div class="hero-glow"></div>
+
+    <div class="flame">
+      <svg viewBox="0 0 28 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 2 C14 2 22 12 22 22 C22 30 18 38 14 42 C10 38 6 30 6 22 C6 12 14 2 14 2Z"
+              fill="url(#flame-grad)" opacity="0.95"/>
+        <path d="M14 16 C14 16 18 22 18 27 C18 31 16 35 14 38 C12 35 10 31 10 27 C10 22 14 16 14 16Z"
+              fill="url(#flame-inner)" opacity="0.6"/>
+        <defs>
+          <linearGradient id="flame-grad" x1="14" y1="2" x2="14" y2="42" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#f5c842"/>
+            <stop offset="50%" stop-color="#d4a843"/>
+            <stop offset="100%" stop-color="#c45c26"/>
+          </linearGradient>
+          <linearGradient id="flame-inner" x1="14" y1="16" x2="14" y2="38" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#fff8e0" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#f5c842" stop-opacity="0.3"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <p class="hero-eyebrow">The Memorial Project · memorial-project.org</p>
+
+    <h1 class="hero-title">
+      Preserving <em>memory.</em><br/>Defying forgetting.
+    </h1>
+
+    <p class="hero-subtitle">
+      We use artificial intelligence to ensure Holocaust testimonies, survivor stories, and historical records endure — not as static archives, but as living, accessible knowledge.
+    </p>
+
+    <div class="hero-divider"></div>
+    <p class="hero-tagline">Never Again Begins With Never Forgetting</p>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MISSION
+  ══════════════════════════════════════ -->
+  <hr class="ornament" />
+  <section>
+    <div class="mission reveal">
+      <div>
+        <span class="section-label">Our Mission</span>
+        <h2 class="section-heading">History demands a <em>witness.</em> We build one.</h2>
+        <p class="section-body">
+          The Memorial Project is a nonprofit at the intersection of AI and Holocaust remembrance. We partner with institutions worldwide — archives, museums, education centers — to transform fragile testimonies into permanent, searchable, educational resources.
+        </p>
+        <p class="section-body" style="margin-top:20px;">
+          As the generation of survivors passes, the urgency of our work compounds. Every transcript, photograph, and recorded voice is a thread connecting the present to one of history's darkest chapters. We are here to hold those threads.
+        </p>
+      </div>
+      <div class="stats-grid">
+        <div class="mission-stat">
+          <span class="mission-stat-num">6M+</span>
+          <span class="mission-stat-label">Lives Remembered</span>
+        </div>
+        <div class="mission-stat">
+          <span class="mission-stat-num">80+</span>
+          <span class="mission-stat-label">Partner Institutions</span>
+        </div>
+        <div class="mission-stat">
+          <span class="mission-stat-num">AI</span>
+          <span class="mission-stat-label">Powered Preservation</span>
+        </div>
+        <div class="mission-stat">
+          <span class="mission-stat-num">∞</span>
+          <span class="mission-stat-label">Stories to Be Told</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       LIVE PROJECTS
+  ══════════════════════════════════════ -->
+  <hr class="ornament" />
+  <section class="projects-section">
+    <div class="reveal">
+      <span class="section-label">Active Projects</span>
+      <h2 class="section-heading">Testimonies brought <em>to life.</em></h2>
+      <p class="section-body">
+        Each project is a collaboration — with survivors, families, archives, and educators — to make history both findable and felt.
+      </p>
+    </div>
+
+    <div class="projects-grid reveal" style="transition-delay:0.15s;">
+
+      <a class="project-card" href="https://memorial-project.org/" target="_blank" rel="noopener">
+        <span class="project-tag">Platform · Main Hub</span>
+        <p class="project-name">The Memorial Project</p>
+        <p class="project-desc">
+          The central platform for AI-powered Holocaust testimony preservation. Aggregating archival records, survivor narratives, and educational tools across institutions worldwide. Built for researchers, educators, and the public alike.
+        </p>
+        <span class="project-link">memorial-project.org</span>
+      </a>
+
+      <a class="project-card" href="https://vhec-regina-feldman.web.app/" target="_blank" rel="noopener">
+        <span class="project-tag">Memorial Site · VHEC Collaboration</span>
+        <p class="project-name">Regina Feldman</p>
+        <p class="project-desc">
+          A dedicated memorial for Holocaust survivor Regina Feldman, created in partnership with the Vancouver Holocaust Education Centre. Her testimony, photographs, and life story — preserved for future generations, told in her own voice.
+        </p>
+        <span class="project-link">vhec-regina-feldman.web.app</span>
+      </a>
+
+      <a class="project-card" href="https://tell-institute-course.web.app/" target="_blank" rel="noopener">
+        <span class="project-tag">Education · Curriculum</span>
+        <p class="project-name">Tell Institute Course</p>
+        <p class="project-desc">
+          An AI-enhanced educational course developed with the Tell Institute, bringing Holocaust history into modern classrooms. Interactive, testimony-grounded, and designed to meet students where they are — across all grade levels.
+        </p>
+        <span class="project-link">tell-institute-course.web.app</span>
+      </a>
+
+      <a class="project-card" href="https://veteran-memorial-site-d8829.web.app/" target="_blank" rel="noopener">
+        <span class="project-tag">Memorial Site · Veterans</span>
+        <p class="project-name">Veteran Memorial</p>
+        <p class="project-desc">
+          Honoring the veterans who bore witness and fought back. A memorial platform that preserves the stories of those who served — interweaving military history with personal testimony across the arc of the Second World War.
+        </p>
+        <span class="project-link">veteran-memorial-site.web.app</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       QUOTE
+  ══════════════════════════════════════ -->
+  <div class="quote-section reveal">
+    <p class="pull-quote">
+      To forget the dead would be akin to killing them a second time.
+    </p>
+    <p class="quote-attr">— Elie Wiesel</p>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PILLARS
+  ══════════════════════════════════════ -->
+  <hr class="ornament" />
+  <section class="pillars">
+    <div class="reveal">
+      <span class="section-label">How We Work</span>
+      <h2 class="section-heading">Three pillars of <em>remembrance.</em></h2>
+    </div>
+    <div class="pillars-list">
+
+      <div class="pillar reveal">
+        <span class="pillar-num">I</span>
+        <div>
+          <p class="pillar-title">Archive &amp; Digitize</p>
+          <p class="pillar-body">
+            We work with leading institutions — including Yad Vashem, the USHMM, the Arolsen Archives, the VHEC, and Europeana — to ingest, structure, and semantically enrich fragile historical records. Photographs, documents, testimonies, and oral histories become searchable, cross-referenced knowledge.
+          </p>
+        </div>
+      </div>
+
+      <div class="pillar reveal">
+        <span class="pillar-num">II</span>
+        <div>
+          <p class="pillar-title">Animate &amp; Humanize</p>
+          <p class="pillar-body">
+            AI allows us to go beyond static records. We generate first-person narratives, AI-assisted memorial sites, and interactive testimony experiences. Survivors speak not just through transcripts — but through living digital presences that educators and families can engage with directly.
+          </p>
+        </div>
+      </div>
+
+      <div class="pillar reveal">
+        <span class="pillar-num">III</span>
+        <div>
+          <p class="pillar-title">Educate &amp; Distribute</p>
+          <p class="pillar-body">
+            Memory without transmission dies. We build curriculum tools, integrate with platforms like Google Classroom and NotebookLM, and produce content that reaches students from elementary through university. Our mission is not just to store history — it is to teach it, generation after generation.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       TECH STACK
+  ══════════════════════════════════════ -->
+  <hr class="ornament" />
+  <section class="tech-section">
+    <div class="reveal">
+      <span class="section-label">Technology &amp; Infrastructure</span>
+      <h2 class="section-heading">Built for <em>permanence.</em></h2>
+      <p class="section-body">
+        Our technical foundation combines large language models, multimodal AI, graph databases, and cloud archival infrastructure to ensure these records remain accessible — and meaningful — indefinitely.
+      </p>
+      <div class="tech-tags">
+        <span class="tech-tag">LangChain</span>
+        <span class="tech-tag">LlamaIndex</span>
+        <span class="tech-tag">Claude AI</span>
+        <span class="tech-tag">Neo4j</span>
+        <span class="tech-tag">Cognee DB</span>
+        <span class="tech-tag">DeepFace</span>
+        <span class="tech-tag">Firebase</span>
+        <span class="tech-tag">Google Cloud</span>
+        <span class="tech-tag">Vercel</span>
+        <span class="tech-tag">HeyGen</span>
+        <span class="tech-tag">OpenAPI</span>
+        <span class="tech-tag">Arolsen Archives API</span>
+        <span class="tech-tag">USHMM API</span>
+        <span class="tech-tag">Yad Vashem</span>
+        <span class="tech-tag">Europeana</span>
+        <span class="tech-tag">DPLA</span>
+        <span class="tech-tag">FFmpeg</span>
+        <span class="tech-tag">React</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       CTA
+  ══════════════════════════════════════ -->
+  <section class="cta-section">
+    <div class="cta-glow"></div>
+    <div class="reveal">
+      <h2 class="cta-heading">Join the work of remembrance.</h2>
+      <p class="cta-sub">
+        Whether you're a researcher, developer, educator, or institution — there is a place for you in this mission.
+      </p>
+      <div class="cta-links">
+        <a class="btn-primary" href="https://memorial-project.org/" target="_blank" rel="noopener">Visit the Platform</a>
+        <a class="btn-secondary" href="mailto:info@memorial-project.org">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-brand">The Memorial Project</span>
+      <div class="footer-links">
+        <a href="https://memorial-project.org/" target="_blank">Website</a>
+        <a href="https://vhec-regina-feldman.web.app/" target="_blank">Regina Feldman</a>
+        <a href="https://tell-institute-course.web.app/" target="_blank">Education</a>
+        <a href="https://veteran-memorial-site-d8829.web.app/" target="_blank">Veterans</a>
+      </div>
+      <span class="footer-copy">© 2025 The Memorial Project · Nonprofit</span>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); }
+      }),
+      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
