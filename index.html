@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Memorial Project</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpeg" />
+  <link rel="apple-touch-icon" href="logo.jpeg" />
+  <meta property="og:image" content="logo.jpeg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inconsolata:wght@300;400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
@@ -74,20 +77,16 @@
       pointer-events: none;
     }
 
-    .flame {
-      width: 28px;
-      height: 44px;
+    .hero-logo {
+      width: 180px;
+      height: 180px;
       margin: 0 auto 48px;
-      position: relative;
-      animation: flicker 3.5s ease-in-out infinite;
-    }
-    .flame svg { width: 100%; height: 100%; }
-
-    @keyframes flicker {
-      0%, 100% { transform: scaleX(1) rotate(-1deg); opacity: 1; }
-      25%       { transform: scaleX(0.92) rotate(1.5deg); opacity: 0.9; }
-      50%       { transform: scaleX(1.06) rotate(-0.5deg); opacity: 1; }
-      75%       { transform: scaleX(0.96) rotate(1deg); opacity: 0.95; }
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(184,134,11,0.4);
+      box-shadow: 0 0 60px rgba(184,134,11,0.2), 0 0 120px rgba(184,134,11,0.08);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.1s forwards;
     }
 
     .hero-eyebrow {
@@ -545,25 +544,7 @@
   <div class="hero">
     <div class="hero-glow"></div>
 
-    <div class="flame">
-      <svg viewBox="0 0 28 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M14 2 C14 2 22 12 22 22 C22 30 18 38 14 42 C10 38 6 30 6 22 C6 12 14 2 14 2Z"
-              fill="url(#flame-grad)" opacity="0.95"/>
-        <path d="M14 16 C14 16 18 22 18 27 C18 31 16 35 14 38 C12 35 10 31 10 27 C10 22 14 16 14 16Z"
-              fill="url(#flame-inner)" opacity="0.6"/>
-        <defs>
-          <linearGradient id="flame-grad" x1="14" y1="2" x2="14" y2="42" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#f5c842"/>
-            <stop offset="50%" stop-color="#d4a843"/>
-            <stop offset="100%" stop-color="#c45c26"/>
-          </linearGradient>
-          <linearGradient id="flame-inner" x1="14" y1="16" x2="14" y2="38" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#fff8e0" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#f5c842" stop-opacity="0.3"/>
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
+    <img class="hero-logo" src="logo.jpeg" alt="The Memorial Project" />
 
     <p class="hero-eyebrow">The Memorial Project · memorial-project.org</p>
 
